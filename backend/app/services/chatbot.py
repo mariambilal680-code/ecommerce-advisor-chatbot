@@ -1,8 +1,5 @@
 from threading import Lock
 
-import torch
-from transformers import pipeline
-
 from app.config import SYSTEM_PROMPT, Settings
 from app.models.schemas import ChatMessage
 
@@ -12,10 +9,15 @@ class EcommerceAdvisor:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        self.device = 0 if torch.cuda.is_available() else -1
         self.generator = None
+        self.torch = None
         if settings.enable_local_model:
             try:
+                import torch
+                from transformers import pipeline
+
+                self.torch = torch
+                self.device = 0 if torch.cuda.is_available() else -1
                 self.generator = pipeline(
                     "text-generation",
                     model=settings.model_name,
@@ -37,7 +39,7 @@ class EcommerceAdvisor:
             if message.role != "system"
         )
 
-        with self._generation_lock, torch.inference_mode():
+        with self._generation_lock, self.torch.inference_mode():
             result = self.generator(
                 context,
                 max_new_tokens=self.settings.max_new_tokens,
