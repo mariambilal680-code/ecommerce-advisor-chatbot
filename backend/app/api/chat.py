@@ -17,7 +17,7 @@ def set_advisor(service: EcommerceAdvisor) -> None:
 
 @router.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    return HealthResponse(status="ok", model=settings.model_name)
+    return HealthResponse(status="ok", model=settings.groq_model)
 
 
 @router.post("/chat", response_model=ChatResponse)

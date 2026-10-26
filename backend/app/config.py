@@ -12,12 +12,11 @@ Your job is to help users make better online shopping decisions. Understand thei
 
 
 class Settings(BaseModel):
-    enable_local_model: bool = os.getenv("ENABLE_LOCAL_MODEL", "false").lower() == "true"
-    model_name: str = os.getenv("MODEL_NAME", "HuggingFaceTB/SmolLM2-360M-Instruct")
+    groq_api_key: str = os.getenv("e_commerce_bot", "")
+    groq_model: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
     frontend_url: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
     max_new_tokens: int = int(os.getenv("MAX_NEW_TOKENS", "180"))
     temperature: float = float(os.getenv("TEMPERATURE", "0.7"))
-    top_p: float = float(os.getenv("TOP_P", "0.9"))
 
 
 @lru_cache
